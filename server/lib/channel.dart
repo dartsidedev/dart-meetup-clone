@@ -1,3 +1,5 @@
+import 'package:dart_meetup_clone_server/controller/health.dart';
+
 import 'dart_meetup_clone_server.dart';
 import 'model/model.dart';
 
@@ -37,6 +39,8 @@ class DartMeetupCloneServerChannel extends ApplicationChannel {
     router
         .route("/model/[:id]")
         .link(() => ManagedObjectController<Model>(context));
+
+    router.route('/health').link(() => HealthController());
 
     return router;
   }
