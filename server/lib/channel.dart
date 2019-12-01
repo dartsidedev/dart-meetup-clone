@@ -30,8 +30,6 @@ class DartMeetupCloneServerChannel extends ApplicationChannel {
       ..route('/protected')
           .link(() => Authorizer.bearer(authServer))
           .linkFunction((request) => Response.ok({}))
-      ..route('/model/[:id]')
-          .link(() => ManagedObjectController<Model>(context))
       ..route(ManagedObjectController.routePattern('label'))
           .link(() => ManagedObjectController<Label>(context));
   }
