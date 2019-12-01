@@ -1,5 +1,6 @@
 import 'package:aqueduct/managed_auth.dart';
 import 'package:dart_meetup_clone_server/controller/health.dart';
+import 'package:dart_meetup_clone_server/model/group.dart';
 
 import 'controller/register.dart';
 import 'dart_meetup_clone_server.dart';
@@ -31,7 +32,9 @@ class DartMeetupCloneServerChannel extends ApplicationChannel {
           .link(() => Authorizer.bearer(authServer))
           .linkFunction((request) => Response.ok({}))
       ..route('/model/[:id]')
-          .link(() => ManagedObjectController<Model>(context));
+          .link(() => ManagedObjectController<Model>(context))
+      ..route(ManagedObjectController.routePattern('label'))
+          .link(() => ManagedObjectController<Label>(context));
   }
 
   ManagedContext contextWithConnectionInfo(
