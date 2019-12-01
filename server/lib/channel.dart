@@ -1,10 +1,14 @@
+import 'package:aqueduct/managed_auth.dart';
 import 'package:dart_meetup_clone_server/controller/health.dart';
 
+import 'controller/register.dart';
 import 'dart_meetup_clone_server.dart';
 import 'model/model.dart';
+import 'model/user.dart';
 
 class DartMeetupCloneServerChannel extends ApplicationChannel {
   ManagedContext context;
+  AuthServer authServer;
 
   @override
   Future prepare() async {
@@ -14,19 +18,20 @@ class DartMeetupCloneServerChannel extends ApplicationChannel {
     final configFilePath = options.configurationFilePath;
     final config = DartMeetupCloneServerConfiguration(configFilePath);
     context = contextWithConnectionInfo(config.database);
+    authServer = AuthServer(ManagedAuthDelegate<User>(context));
   }
 
   @override
   Controller get entryPoint {
-    final router = Router();
-
-    router
-        .route('/model/[:id]')
-        .link(() => ManagedObjectController<Model>(context));
-
-    router.route('/health').link(() => HealthController());
-
-    return router;
+    return Router()
+      ..route('/register').link(() => RegisterController(context, authServer))
+      ..route('/auth/token').link(() => AuthController(authServer))
+      ..route('/health').link(() => HealthController())
+      ..route('/protected')
+          .link(() => Authorizer.bearer(authServer))
+          .linkFunction((request) => Response.ok({}))
+      ..route('/model/[:id]')
+          .link(() => ManagedObjectController<Model>(context));
   }
 
   ManagedContext contextWithConnectionInfo(
@@ -34,7 +39,9 @@ class DartMeetupCloneServerChannel extends ApplicationChannel {
   ) {
     final dataModel = ManagedDataModel.fromCurrentMirrorSystem();
     logger.info(
-        'Creating persistent store. Username: ${connectionInfo.username}. Database: ${connectionInfo.databaseName}');
+      'Username: ${connectionInfo.username}. '
+      'Database: ${connectionInfo.databaseName}',
+    );
     final persistentStore = PostgreSQLPersistentStore(
       connectionInfo.username,
       connectionInfo.password,
