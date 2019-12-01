@@ -1,4 +1,5 @@
 import 'package:aqueduct/managed_auth.dart';
+import 'package:dart_meetup_clone_server/model/group.dart';
 
 import '../dart_meetup_clone_server.dart';
 
@@ -17,4 +18,6 @@ class _User extends ResourceOwnerTableDefinition {
 
   @Column(nullable: true)
   String linkedin;
+
+  ManagedSet<Attendance> attendsEvents;
 }

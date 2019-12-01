@@ -1,5 +1,7 @@
 import 'package:dart_meetup_clone_server/dart_meetup_clone_server.dart';
 
+import 'user.dart';
+
 class Group extends ManagedObject<_Group> implements _Group {}
 
 class _Group {
@@ -51,4 +53,26 @@ class _Event {
 
   @Relate(#events)
   Group group;
+
+  ManagedSet<User> attendees;
+}
+
+class Attendance extends ManagedObject<_Attendance> implements _Attendance {
+  @override
+  void willInsert() {
+    signedUpAt = DateTime.now().toUtc();
+  }
+}
+
+class _Attendance {
+  @primaryKey
+  int id;
+
+  @Relate(#attendees)
+  Event event;
+
+  @Relate(#attendsEvents)
+  User user;
+
+  DateTime signedUpAt;
 }
