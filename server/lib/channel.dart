@@ -1,10 +1,9 @@
 import 'package:aqueduct/managed_auth.dart';
-import 'package:dart_meetup_clone_server/controller/health.dart';
-import 'package:dart_meetup_clone_server/model/group.dart';
 
+import 'controller/health.dart';
 import 'controller/register.dart';
 import 'dart_meetup_clone_server.dart';
-import 'model/model.dart';
+import 'model/group.dart';
 import 'model/user.dart';
 
 class DartMeetupCloneServerChannel extends ApplicationChannel {
