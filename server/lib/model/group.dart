@@ -11,6 +11,8 @@ class _Group {
   String description;
 
   ManagedSet<GroupLabel> groupLabels;
+
+  ManagedSet<Event> events;
 }
 
 class GroupLabel extends ManagedObject<_GroupLabel> implements _GroupLabel {}
@@ -35,4 +37,18 @@ class _Label {
   String name;
 
   ManagedSet<GroupLabel> groupLabels;
+}
+
+class Event extends ManagedObject<_Event> implements _Event {}
+
+class _Event {
+  @primaryKey
+  int id;
+
+  String name;
+
+  String description;
+
+  @Relate(#events)
+  Group group;
 }
