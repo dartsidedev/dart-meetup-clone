@@ -1,6 +1,6 @@
 database:
- username: dart
- password: dart
- host: localhost
- port: 5432
- databaseName: dart_test
+  username: dart_meetup_clone_server_user
+  password: p@$$w0rd
+  host: localhost
+  port: 5432
+  databaseName: dart_meetup_clone_server
