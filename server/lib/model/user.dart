@@ -8,4 +8,13 @@ class User extends ManagedObject<_User>
   String password;
 }
 
-class _User extends ResourceOwnerTableDefinition {}
+class _User extends ResourceOwnerTableDefinition {
+  @Column(nullable: true)
+  String description;
+
+  @Column(nullable: true)
+  String twitter;
+
+  @Column(nullable: true)
+  String linkedin;
+}
