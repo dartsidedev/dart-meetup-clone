@@ -7,7 +7,13 @@ Future<void> main() async {
     await harness.resetData();
   });
 
-  test('b', () async {
+  test('protected endpoint', () async {
+    final agent = await harness.registerUser('vargavince91', 'password');
+    final protectedPath = await agent.get('/protected');
+    expect(protectedPath.statusCode, 200);
+  });
+
+  test('protected manual', () async {
     const username = 'vargavince91';
     const password = 'password';
     final registerResponse = await harness.agent.post(
@@ -25,15 +31,8 @@ Future<void> main() async {
         HttpHeaders.authorizationHeader:
             'Basic ZGFydHNpZGVkZXYuZGFydF9tZWV0dXBfY2xvbmU6',
       },
-      // query: {
-      //   'username': username,
-      //   'password': password,
-      //   'grant_type': 'password',
-      // },
       body: 'username=$username&password=$password&grant_type=password',
     );
-    print(authTokenResponse.statusCode);
-    print(authTokenResponse.body);
     expect(authTokenResponse.statusCode, 200);
     final authTokenResponseBody =
         authTokenResponse.body.as<Map<String, dynamic>>();
@@ -41,10 +40,4 @@ Future<void> main() async {
     expect(authTokenResponseBody['token_type'], 'bearer');
     expect(authTokenResponseBody['expires_in'], isInteger);
   }, skip: 'should return 200 but returns 415');
-
-  test('a', () async {
-    final agent = await harness.registerUser('vargavince91', 'password');
-    final protectedPath = await agent.get('/protected');
-    expect(protectedPath.statusCode, 200);
-  });
 }
